@@ -155,3 +155,41 @@
         cardsGrid.appendChild(node);
       });
     }
+
+    
+    function handleCall(service) {
+      if (coin < 20) { alert('Not enough coins.'); return; }
+      alert(`Calling ${service.en} (${service.number})`);
+      coin -= 20; coinEl.textContent = coin;
+      const time = new Date();
+      history.unshift({ name: service.en, number: service.number, time });
+      renderHistory();
+    }
+
+    function renderHistory() {
+      historyList.innerHTML = '';
+      const tpl = document.getElementById('historyItemTemplate');
+      history.forEach(h => {
+        const node = tpl.content.cloneNode(true);
+        node.querySelector('.service-name').textContent = h.name;
+        node.querySelector('.service-number').textContent = h.number;
+        node.querySelector('.time').textContent = formatTime(h.time);
+        historyList.appendChild(node);
+      });
+    }
+
+    function formatTime(d){
+      let hh = d.getHours(), mm = d.getMinutes(), ss = d.getSeconds();
+      const ampm = hh >= 12 ? 'PM' : 'AM';
+      hh = hh % 12; if(hh===0) hh=12;
+      return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')} ${ampm}`;
+    }
+
+    document.getElementById('clearHistory').addEventListener('click', () => {
+      history.length = 0; renderHistory();
+    });
+
+    renderCards();
+  </script>
+</body>
+</html>

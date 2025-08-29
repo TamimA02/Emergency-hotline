@@ -102,3 +102,56 @@
 </div>
     </li>
   </template>
+
+  <!-- Script -->
+  <script>
+    const SERVICES = [
+      { logo:'emergency.png', en:'National Emergency Number', name:'National Emergency', number:'999', category:'All' },
+      { logo:'police.png', en:'Police Helpline Number', name:'Police', number:'999', category:'Police' },
+      { logo:'fire-service.png', en:'Fire Service Number',name:'Fire Service', number:'999', category:'Fire' },
+      { logo:'ambulance.png', en:'Ambulance Service', name:'Ambulance', number:'1994-999999', category:'Health' },
+      { logo:'emergency.png', en:'Women & Child Helpline',name:'Women & Child Helpline', number:'109', category:'Help' },
+      { logo:'emergency.png', en:'Anti-Corruption Helpline',name:'Anti-Corruption', number:'106', category:'Govt.' },
+      { logo:'emergency.png', en:'Electricity Helpline',name:'Electricity Outage', number:'16216', category:'Electricity' },
+      { logo:'emergency.png', en:'Brac Helpline', name:'Brac', number:'16445', category:'NGO' },
+      { logo:'emergency.png', en:'Bangladesh Railway Helpline',name:'Travel', number:'163', category:'Travel' }
+    ];
+
+    let heartCount = 0, coin = 100, copyCount = 0;
+    const history = [];
+
+    const heartEl = document.getElementById('heartCount');
+    const coinEl = document.getElementById('coinCount');
+    const copyEl = document.getElementById('copyCount');
+    const cardsGrid = document.getElementById('cardsGrid');
+    const historyList = document.getElementById('historyList');
+
+    function renderCards() {
+      const tpl = document.getElementById('cardTemplate');
+      SERVICES.forEach(s => {
+        const node = tpl.content.cloneNode(true);
+        node.querySelector('.icon').src = 'assets/'+ s.logo;
+        node.querySelector('.bn-name').textContent = s.bn;
+        node.querySelector('.en-name').textContent = s.en;
+        node.querySelector('.name').textContent = s.name;
+        node.querySelector('.number').textContent = s.number;
+        node.querySelector('.category').textContent = s.category;
+        const card = node.children[0];
+
+        card.querySelector('.heart').addEventListener('click', () => {
+          heartCount++; heartEl.textContent = heartCount;
+        });
+        card.querySelector('.copy').addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(s.number);
+            alert(`Copied ${s.en} number: ${s.number}`);
+            copyCount++; copyEl.textContent = copyCount;
+          } catch {
+            alert('Copy failed.');
+          }
+        });
+        card.querySelector('.call').addEventListener('click', () => handleCall(s));
+
+        cardsGrid.appendChild(node);
+      });
+    }
